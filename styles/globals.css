@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --glow-x: 50%;
+  --glow-y: 40%;
+  --page-progress: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: theme("colors.canvas");
+  color: theme("colors.ink");
+  font-family: var(--font-geist-sans), Inter, Arial, sans-serif;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Utility: hairline frame per Vercel token system */
+@layer components {
+  .frame-hairline {
+    @apply border border-hairline bg-elevated;
+  }
+  .eyebrow {
+    @apply font-mono text-mono-eyebrow uppercase tracking-normal;
+  }
+}
+
+/* Mist drift layers (dark hero) */
+.mist-layer {
+  position: absolute;
+  inset: -20%;
+  background-repeat: no-repeat;
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* Mouse glow (spring-driven via --glow-x/--glow-y) */
+.mouse-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    340px circle at var(--glow-x) var(--glow-y),
+    rgba(180, 205, 235, 0.28),
+    rgba(180, 205, 235, 0.08) 40%,
+    transparent 68%
+  );
+  mix-blend-mode: screen;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mist-layer,
+  .mouse-glow {
+    display: none;
+  }
+}
