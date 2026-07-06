@@ -24,17 +24,18 @@ export default function HeroFluid() {
     let rafId = 0;
     let running = true;
     const cleanups: Array<() => void> = [];
+    try {
 
     const config = {
       SIM_RESOLUTION: 128,
       DYE_RESOLUTION: 1024,
-      DENSITY_DISSIPATION: 3.2,
-      VELOCITY_DISSIPATION: 2,
+      DENSITY_DISSIPATION: 2.6,
+      VELOCITY_DISSIPATION: 2.4,
       PRESSURE: 0.1,
       PRESSURE_ITERATIONS: 20,
-      CURL: 3,
-      SPLAT_RADIUS: 0.4,
-      SPLAT_FORCE: 6000,
+      CURL: 2.4,
+      SPLAT_RADIUS: 0.45,
+      SPLAT_FORCE: 4200,
       SHADING: true,
       COLOR_UPDATE_SPEED: 10,
     };
@@ -560,11 +561,11 @@ export default function HeroFluid() {
     function ambientDrift(dt: number) {
       ambientTimer -= dt;
       if (ambientTimer > 0) return;
-      ambientTimer = 1.6 + Math.random() * 2.2;
+      ambientTimer = 2.4 + Math.random() * 3.0;
       const x = Math.random();
       const y = 0.35 + Math.random() * 0.5;
-      const dx = (Math.random() - 0.5) * 260;
-      const dy = -30 - Math.random() * 60;
+      const dx = (Math.random() - 0.5) * 170;
+      const dy = -20 - Math.random() * 40;
       splat(x, y, dx, dy, generateColor());
     }
 
@@ -713,35 +714,22 @@ export default function HeroFluid() {
       return aspectRatio > 1 ? delta / aspectRatio : delta;
     }
 
-    // "Muted Ice" — mostly white/grey with a whisper of mountain blue.
+    // "Grey Lavender" — muted slate tones sampled from the fjord (#b8b8cc,
+    // #9aa0bd, #7d84a3). Low intensity keeps the additive smoke soft, not shiny.
+    const PALETTE = [
+      [0.722, 0.722, 0.8], // #b8b8cc
+      [0.604, 0.627, 0.741], // #9aa0bd
+      [0.49, 0.518, 0.639], // #7d84a3
+    ];
     function generateColor() {
-      const h = 0.52 + Math.random() * 0.05;
-      const s = 0.05 + Math.random() * 0.1;
-      const v = 1.0;
-      const c = HSVtoRGB(h, s, v);
-      const intensity = 0.12;
-      c.r *= intensity;
-      c.g *= intensity;
-      c.b *= intensity;
-      return c;
-    }
-
-    function HSVtoRGB(h: number, s: number, v: number) {
-      let r = 0, g = 0, b = 0;
-      const i = Math.floor(h * 6);
-      const f = h * 6 - i;
-      const p = v * (1 - s);
-      const q = v * (1 - f * s);
-      const t = v * (1 - (1 - f) * s);
-      switch (i % 6) {
-        case 0: r = v; g = t; b = p; break;
-        case 1: r = q; g = v; b = p; break;
-        case 2: r = p; g = v; b = t; break;
-        case 3: r = p; g = q; b = v; break;
-        case 4: r = t; g = p; b = v; break;
-        case 5: r = v; g = p; b = q; break;
-      }
-      return { r, g, b };
+      const base = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+      const jitter = 0.9 + Math.random() * 0.2;
+      const intensity = 0.09;
+      return {
+        r: base[0] * intensity * jitter,
+        g: base[1] * intensity * jitter,
+        b: base[2] * intensity * jitter,
+      };
     }
 
     function wrap(value: number, min: number, max: number) {
@@ -798,6 +786,11 @@ export default function HeroFluid() {
     cleanups.push(() => io.disconnect());
 
     rafId = requestAnimationFrame(update);
+    } catch (err) {
+      // WebGL can fail on some devices/drivers — degrade to the still hero
+      // rather than crashing the whole section.
+      console.warn("HeroFluid disabled:", err);
+    }
 
     return () => {
       running = false;
