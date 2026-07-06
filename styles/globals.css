@@ -4,6 +4,16 @@
 
 :root {
   --page-progress: 0;
+
+  /* Project sticky-stack — tunable knobs */
+  --stage-ratio: 16 / 9; /* per-project fallback; overridden inline */
+  --stage-height: min(72vh, 600px); /* stage sizes by height, width follows ratio */
+  --card-height: min(86vh, 760px); /* uniform card height so cards cleanly cover */
+  --stack-top: 80px; /* sticky pin offset */
+  --parallax-max: 24px; /* max inner drift on top of the stack */
+  --hover-zoom: 1.02;
+  --hover-dur: 650ms;
+  --hover-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html {
@@ -36,6 +46,57 @@ html.lenis body {
   }
   .eyebrow {
     @apply font-mono text-mono-eyebrow uppercase tracking-normal;
+  }
+
+  /* Cuberto-style masked reveal: the parent span is overflow-hidden; the line
+     itself is visible by default and only hidden-then-revealed by GSAP at the
+     moment it scrolls into view, so the copy is never permanently hidden. */
+
+  /* One card in the sticky pile — pinned near the top; incoming cards
+     cover outgoing ones. Uniform height so the cover is always clean. */
+  .stack-card {
+    position: sticky;
+    top: var(--stack-top);
+    min-height: var(--card-height);
+  }
+
+  /* The gradient stage — per-project native aspect ratio, sized by height so
+     portrait phones read tall-and-narrow, landscape shots read wide. */
+  .project-stage {
+    aspect-ratio: var(--stage-ratio);
+    height: var(--stage-height);
+    width: auto;
+    max-width: 100%;
+    background-image: linear-gradient(
+      to bottom,
+      theme("colors.elevated") 0%,
+      theme("colors.elevated") 70%,
+      theme("colors.hairline") 100%
+    );
+  }
+
+  /* Parallax carrier — GSAP translates this on top of the sticky stack. */
+  .project-shot {
+    will-change: transform;
+  }
+
+  /* Whole image stays visible (object-contain); only it scales on hover. */
+  .project-shot img {
+    transition: transform var(--hover-dur) var(--hover-ease);
+    will-change: transform;
+  }
+  .project-stage:hover .project-shot img {
+    transform: scale(var(--hover-zoom));
+  }
+}
+
+/* Reduced motion: no hover zoom, no parallax — clean static stack.
+   Reveal lines are shown in place (no slide) so text is never hidden. */
+@media (prefers-reduced-motion: reduce) {
+  .project-shot img,
+  .project-stage:hover .project-shot img {
+    transform: none;
+    transition: none;
   }
 }
 

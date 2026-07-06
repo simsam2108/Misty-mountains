@@ -1,3 +1,5 @@
+import AboutReveal from "./AboutReveal";
+
 /**
  * About band → Contact/CTA band → footer. Static server component —
  * quiet, ink-on-white, generous vertical rhythm per the Geist system.
@@ -12,20 +14,10 @@ export default function Closing() {
       >
         <div className="mx-auto max-w-container px-lg py-section">
           <p className="eyebrow text-mute">About</p>
-          <div className="mt-lg grid gap-2xl md:grid-cols-[1.4fr_1fr]">
-            <h2 className="text-heading-lg text-ink">
-              Senior Product Designer turning complex enterprise data into
-              clarity.
-            </h2>
-            <div className="space-y-md text-body-lg text-body">
-              <p>
-                7+ years building B2B SaaS platforms, native mobile apps, design
-                systems, and end-to-end flows — most recently across EV
-                infrastructure at ChargePoint and The Mobility House.
-              </p>
-              <p>Based in Salzburg, Austria. Open to relocation.</p>
-            </div>
-          </div>
+          <AboutReveal />
+          <p className="mt-2xl text-body-lg text-mute">
+            Based in Salzburg, Austria. Open to relocation.
+          </p>
         </div>
       </section>
 

@@ -3,6 +3,12 @@ export type CaseSection = {
   body: string;
 };
 
+export type HeroImage = {
+  src: string;
+  width: number; // native px — feeds next/image so nothing shifts or clips
+  height: number;
+};
+
 export type Project = {
   slug: string;
   index: string; // "(01)"
@@ -12,6 +18,7 @@ export type Project = {
   org: string;
   year: string;
   inProgress?: boolean;
+  hero: HeroImage; // the stage screenshot (device mockup, native ratio)
   images: string[]; // first is the hero/panel image
   subtitle: string;
   meta: { label: string; value: string }[];
@@ -27,6 +34,7 @@ export const projects: Project[] = [
     discipline: "Native Mobile App",
     org: "ChargePoint",
     year: "2025",
+    hero: { src: "/projects/installer-hero.png", width: 2117, height: 4328 },
     images: ["/projects/installer.png"],
     subtitle:
       "Connecting the field to the platform — an end-to-end self-serve installation native mobile app.",
@@ -63,6 +71,7 @@ export const projects: Project[] = [
     discipline: "Enterprise Workflow",
     org: "ChargePoint",
     year: "2025",
+    hero: { src: "/projects/activation-hero.png", width: 5701, height: 3323 },
     images: ["/projects/activation.png"],
     subtitle:
       "Self-serve admin design that replaced expert-only setup with workflows anyone on the team can run.",
@@ -99,6 +108,7 @@ export const projects: Project[] = [
     discipline: "Design Systems",
     org: "The Mobility House",
     year: "2024",
+    hero: { src: "/projects/designgrid-hero.png", width: 5765, height: 3340 },
     images: ["/projects/designgrid.png"],
     subtitle: "The infrastructure behind a three-product enterprise SaaS suite.",
     meta: [
@@ -135,6 +145,7 @@ export const projects: Project[] = [
     org: "In Progress",
     year: "2026",
     inProgress: true,
+    hero: { src: "/projects/cocreate-hero.png", width: 2117, height: 4452 },
     images: ["/projects/cocreate.png"],
     subtitle: "A collaborative design initiative — case study in progress.",
     meta: [
