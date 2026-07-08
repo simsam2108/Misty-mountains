@@ -37,13 +37,9 @@ export default function Nav() {
           </a>
           <a
             href="mailto:seemasam2113@gmail.com"
-            className={`ml-xs rounded-sm px-sm py-xs text-body-md font-medium transition-colors ${
-              scrolled
-                ? "bg-ink text-on-primary hover:bg-black"
-                : "bg-fjord-text text-fjord-ink hover:opacity-90"
-            }`}
+            className="rounded-pill px-sm py-xs hover:opacity-70"
           >
-            Get in touch
+            Contact
           </a>
         </div>
       </nav>

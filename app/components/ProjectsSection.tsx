@@ -1,19 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { projects, projectBySlug } from "@/data/projects";
-import ProjectPanel from "./ProjectPanel";
+import ProjectStage from "./ProjectStage";
 import CaseStudyOverlay from "./CaseStudyOverlay";
 
 /**
- * Scene 2 — light Vercel-minimal projects experience.
- * Pinned left rail + stacking full-panel scroll, plus the URL-addressable
- * full-screen case-study overlay (?project=slug).
+ * Scene 2 — light Vercel-minimal projects gallery.
+ * Flowing 16:9 gradient stages (one per project) + a sticky "where am I"
+ * counter, plus the URL-addressable full-screen case-study overlay.
  */
 export default function ProjectsSection() {
   const [active, setActive] = useState(0);
+  const [inView, setInView] = useState(false);
   const [openSlug, setOpenSlug] = useState<string | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   // Sync overlay <-> URL (shallow, deep-linkable, back-button friendly)
   const setUrl = useCallback((slug: string | null) => {
@@ -47,65 +48,48 @@ export default function ProjectsSection() {
     return () => window.removeEventListener("popstate", sync);
   }, []);
 
-  const activeProject = projects[active];
+  // Show the sticky counter only while the Work section is in view
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "-20% 0px -20% 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
-    <section id="work" className="relative bg-canvas">
-      <div className="mx-auto flex max-w-container gap-xl px-lg">
-        {/* Pinned left rail */}
-        <aside className="sticky top-0 hidden h-screen w-[34%] flex-col justify-center py-2xl lg:flex">
-          <p className="eyebrow text-mute">Selected Work</p>
-          <h2 className="mt-md text-heading-lg text-ink">Seema Jain</h2>
+    <section id="work" ref={sectionRef} className="relative bg-canvas">
+      <div className="mx-auto max-w-container px-lg">
+        <p className="eyebrow py-2xl text-mute">Selected Work</p>
 
-          <a
-            href="#contact"
-            className="group mt-lg inline-flex w-fit items-center justify-between gap-2xl border-b border-ink pb-xs text-heading-md text-ink"
-          >
-            Get in touch
-            <span className="transition-transform duration-300 group-hover:translate-x-1">
-              ↗
-            </span>
-          </a>
-
-          {/* See all + active thumbnail */}
-          <div className="mt-3xl flex items-center gap-sm">
-            <span className="relative h-14 w-14 overflow-hidden rounded-sm border border-hairline bg-elevated">
-              <Image
-                src={activeProject.images[0]}
-                alt={activeProject.title}
-                fill
-                sizes="56px"
-                className="object-cover"
-              />
-            </span>
-            <div>
-              <p className="font-mono text-mono-eyebrow text-mute">
-                {activeProject.index} / (0{projects.length})
-              </p>
-              <p className="text-label-sm text-ink">{activeProject.title}</p>
-            </div>
-          </div>
-
-          <div className="mt-lg font-mono text-mono-eyebrow text-mute">
-            See all ({String(projects.length).padStart(2, "0")})
-          </div>
-        </aside>
-
-        {/* Stacking panels */}
-        <div className="w-full lg:w-[66%]">
-          {projects.map((p, i) => (
-            <ProjectPanel
-              key={p.slug}
-              project={p}
-              order={i}
-              onOpen={open}
-              onActive={setActive}
-            />
-          ))}
-        </div>
+        {projects.map((p, i) => (
+          <ProjectStage
+            key={p.slug}
+            project={p}
+            order={i}
+            onOpen={open}
+            onActive={setActive}
+          />
+        ))}
       </div>
 
-      <CaseStudyOverlay project={openSlug ? projectBySlug(openSlug) ?? null : null} onClose={close} />
+      {/* Sticky "where am I" counter — bottom-left, only within Work */}
+      <div
+        aria-hidden
+        className={`pointer-events-none fixed bottom-lg left-lg z-30 font-mono text-mono-eyebrow text-mute transition-opacity duration-500 ${
+          inView && !openSlug ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {projects[active].index} / (0{projects.length})
+      </div>
+
+      <CaseStudyOverlay
+        project={openSlug ? projectBySlug(openSlug) ?? null : null}
+        onClose={close}
+      />
     </section>
   );
 }

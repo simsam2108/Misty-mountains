@@ -2,3 +2,9 @@ node_modules/
 .next/
 next-env.d.ts
 .DS_Store
+
+# static export output
+/out/
+
+# TS incremental build info
+tsconfig.tsbuildinfo

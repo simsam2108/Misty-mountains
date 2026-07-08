@@ -111,13 +111,17 @@ export default function Hero() {
         ref={contentRef}
         className="hero-content relative z-10 mx-auto flex h-full max-w-container flex-col justify-between px-lg py-2xl will-change-transform"
       >
-        <div className="eyebrow text-fjord-mute">Portfolio — 2026</div>
+        <div />
 
         <div className="max-w-4xl pb-4xl">
           <h1 className="text-fjord-text text-display-hero">Seema Jain</h1>
-          <p className="mt-lg max-w-xl text-body-lg text-fjord-mute">
+          <p className="mt-lg max-w-xl text-body-lg text-fjord-text/80">
             Senior Product Designer — turning complex enterprise data into
             clarity.
+          </p>
+          <p className="mt-sm max-w-xl text-body-md text-fjord-mute">
+            Based in Salzburg, Austria — open to relocate · EU Blue Card visa
+            holder.
           </p>
         </div>
 
