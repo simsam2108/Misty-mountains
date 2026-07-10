@@ -517,14 +517,14 @@ export const projects: Project[] = [
             caption: "Hotjar session tracking on the original table.",
           },
           {
-            src: "/projects/designgrid/tables-before.png",
+            src: "/projects/designgrid/tables-after.png",
             width: 2424,
             height: 483,
             layout: "full",
-            caption: "The original table — before DesignGrid.",
+            caption: "Rebuilt table — nested account/site/station hierarchy.",
           },
           {
-            src: "/projects/designgrid/tables-after.png",
+            src: "/projects/designgrid/table-component.png",
             width: 2880,
             height: 2048,
             layout: "full",
