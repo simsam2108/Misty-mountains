@@ -8,3 +8,14 @@ next-env.d.ts
 
 # TS incremental build info
 tsconfig.tsbuildinfo
+
+# Working case-study source + internal notes (kept local, out of the public repo)
+/activation-flow.md
+/installer-app.md
+/case-studies/
+/PROJECT-CONTEXT.md
+
+# Local source image folders (app uses the copies under public/)
+/installer images/
+/project hero images/
+/activation flow images/
