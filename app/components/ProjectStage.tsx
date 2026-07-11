@@ -14,10 +14,10 @@ type Props = {
 
 /**
  * One project in the sticky overlap-stack. Each card is pinned near the top
- * (position: sticky); as you scroll, the next card rises up and cleanly covers
- * the previous one — the cards accumulate into a pile. The gradient stage takes
- * the screenshot's own aspect ratio (object-contain, never cropped) and the
- * inner image drifts subtly (GSAP-scrubbed parallax — single scroll system).
+ * (position: sticky); as you scroll, the next card rises up and covers the
+ * previous one while the pinned card zooms out and fades back (GSAP-scrubbed
+ * — single scroll system). Every screenshot sits on the same fixed 16/10
+ * tinted mat (object-contain, never cropped).
  */
 export default function ProjectStage({
   project,
@@ -26,7 +26,6 @@ export default function ProjectStage({
   order,
 }: Props) {
   const cardRef = useRef<HTMLElement>(null);
-  const shotRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -34,23 +33,21 @@ export default function ProjectStage({
         "(prefers-reduced-motion: reduce)"
       ).matches;
 
-      if (!prefersReduced && shotRef.current) {
-        const raw = getComputedStyle(document.documentElement)
-          .getPropertyValue("--parallax-max")
-          .trim();
-        const max = parseFloat(raw) || 24;
-
-        // Subtle drift layered on top of the sticky stack.
+      // Fuel-style zoom-out: as the next card rises to its pin point, this
+      // card recedes. The last card has no successor, so it never recedes.
+      const nextCard = cardRef.current?.nextElementSibling;
+      if (!prefersReduced && nextCard?.classList.contains("stack-card")) {
         gsap.fromTo(
-          shotRef.current,
-          { y: max },
+          cardRef.current,
+          { scale: 1 },
           {
-            y: -max,
+            scale: 0.96,
+            transformOrigin: "center top",
             ease: "none",
             scrollTrigger: {
-              trigger: cardRef.current,
+              trigger: nextCard,
               start: "top bottom",
-              end: "bottom top",
+              end: "top 80px",
               scrub: true,
             },
           }
@@ -75,33 +72,26 @@ export default function ProjectStage({
     <section
       ref={cardRef}
       data-slug={project.slug}
-      style={
-        {
-          "--stage-ratio": `${project.hero.width} / ${project.hero.height}`,
-        } as React.CSSProperties
-      }
-      className="stack-card group mb-2xl flex flex-col overflow-hidden rounded-lg bg-elevated px-lg pb-md pt-lg shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
+      style={{ "--i": order } as React.CSSProperties}
+      className="stack-card group mt-2xl flex flex-col overflow-hidden rounded-t-lg border border-hairline bg-canvas px-lg pb-md pt-lg shadow-[0_1px_1px_rgba(0,0,0,0.04)]"
     >
-      {/* Gradient stage — click opens the case study */}
+      {/* Tinted mat — click opens the case study */}
       <div className="flex flex-1 items-center justify-center">
         <button
           type="button"
           onClick={() => onOpen(project.slug)}
           aria-label={`Open ${project.title} case study`}
-          className="project-stage relative flex items-center justify-center overflow-hidden rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-2 focus-visible:ring-offset-elevated"
+          className="project-stage relative flex items-center justify-center overflow-hidden rounded-md border border-hairline outline-none focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-2 focus-visible:ring-offset-elevated"
         >
-          <span
-            ref={shotRef}
-            className="project-shot absolute inset-0 flex items-center justify-center"
-          >
+          <span className="project-shot absolute flex items-center justify-center">
             <Image
               src={project.hero.src}
               alt={project.title}
               width={project.hero.width}
               height={project.hero.height}
-              sizes="(max-width: 768px) 90vw, 1080px"
+              sizes="(max-width: 768px) 90vw, 736px"
               loading="lazy"
-              className="h-full w-full object-contain"
+              className="h-auto max-h-full w-auto max-w-full rounded-sm object-contain"
             />
           </span>
         </button>

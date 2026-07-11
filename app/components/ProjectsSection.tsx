@@ -7,7 +7,7 @@ import CaseStudyOverlay from "./CaseStudyOverlay";
 
 /**
  * Scene 2 — light Vercel-minimal projects gallery.
- * Flowing 16:9 gradient stages (one per project) + a sticky "where am I"
+ * Uniform 16/10 mat frames (one per project) + a sticky "where am I"
  * counter, plus the URL-addressable full-screen case-study overlay.
  */
 export default function ProjectsSection() {
@@ -62,7 +62,7 @@ export default function ProjectsSection() {
 
   return (
     <section id="work" ref={sectionRef} className="relative bg-canvas">
-      <div className="mx-auto max-w-container px-lg">
+      <div className="mx-auto max-w-container px-lg pb-2xl">
         <p className="eyebrow py-2xl text-mute">Selected Work</p>
 
         {projects.map((p, i) => (

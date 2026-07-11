@@ -6,11 +6,11 @@
   --page-progress: 0;
 
   /* Project sticky-stack — tunable knobs */
-  --stage-ratio: 16 / 9; /* per-project fallback; overridden inline */
-  --stage-height: min(72vh, 600px); /* stage sizes by height, width follows ratio */
-  --card-height: min(86vh, 760px); /* uniform card height so cards cleanly cover */
-  --stack-top: 80px; /* sticky pin offset */
-  --parallax-max: 24px; /* max inner drift on top of the stack */
+  --stage-height-cap: clamp(320px, 48vh, 460px); /* frame height ceiling */
+  --mat-inset: 5%; /* screenshot inset within the mat */
+  --stack-top: 80px; /* sticky pin offset of the first card */
+  --stack-peek: 14px; /* per-card pin stagger — older cards peek above */
+  --card-height: min(78vh, 680px); /* uniform card height so cards cleanly cover */
   --hover-zoom: 1.02;
   --hover-dur: 650ms;
   --hover-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -54,32 +54,27 @@ html.lenis-stopped body {
      itself is visible by default and only hidden-then-revealed by GSAP at the
      moment it scrolls into view, so the copy is never permanently hidden. */
 
-  /* One card in the sticky pile — pinned near the top; incoming cards
-     cover outgoing ones. Uniform height so the cover is always clean. */
+  /* One card in the sticky pile — each pins a touch lower than the last
+     (--i set inline), so older cards stay peeking as thin strips above.
+     Uniform height so the cover is always clean. */
   .stack-card {
     position: sticky;
-    top: var(--stack-top);
+    top: calc(var(--stack-top) + var(--i, 0) * var(--stack-peek));
     min-height: var(--card-height);
   }
 
-  /* The gradient stage — per-project native aspect ratio, sized by height so
-     portrait phones read tall-and-narrow, landscape shots read wide. */
+  /* The mat — one fixed 16/10 frame for every project. Width-capped (not
+     max-height) so the ratio holds when the height ceiling kicks in. */
   .project-stage {
-    aspect-ratio: var(--stage-ratio);
-    height: var(--stage-height);
-    width: auto;
-    max-width: 100%;
-    background-image: linear-gradient(
-      to bottom,
-      theme("colors.elevated") 0%,
-      theme("colors.elevated") 70%,
-      theme("colors.hairline") 100%
-    );
+    aspect-ratio: 16 / 10;
+    width: min(100%, calc(var(--stage-height-cap) * 1.6));
+    height: auto;
+    background-color: theme("colors.hairline-soft");
   }
 
-  /* Parallax carrier — GSAP translates this on top of the sticky stack. */
+  /* Inset keeps the screenshot floating on the mat. */
   .project-shot {
-    will-change: transform;
+    inset: var(--mat-inset);
   }
 
   /* Whole image stays visible (object-contain); only it scales on hover. */
@@ -89,6 +84,13 @@ html.lenis-stopped body {
   }
   .project-stage:hover .project-shot img {
     transform: scale(var(--hover-zoom));
+  }
+}
+
+/* Mobile: frame goes full-width, mat breathing room tightens slightly. */
+@media (max-width: 768px) {
+  :root {
+    --mat-inset: 4%;
   }
 }
 
