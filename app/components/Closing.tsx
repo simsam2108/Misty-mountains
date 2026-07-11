@@ -68,7 +68,7 @@ export default function Closing() {
       {/* CTA / Contact */}
       <section id="contact" className="border-t border-hairline bg-canvas">
         <div className="mx-auto max-w-container px-lg py-4xl text-center">
-          <h2 className="mx-auto max-w-3xl text-display-xl text-ink">
+          <h2 className="mx-auto max-w-3xl text-[length:clamp(1.75rem,4vw+0.5rem,3rem)] font-semibold leading-none tracking-[-0.05em] text-ink">
             Have a complex problem worth designing?
           </h2>
           <div className="mt-2xl flex flex-wrap items-center justify-center gap-md">

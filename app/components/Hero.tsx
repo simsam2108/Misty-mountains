@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import HeroFluid from "./hero/HeroFluid";
 
@@ -16,8 +16,13 @@ export default function Hero() {
   const imageRef = useRef<HTMLDivElement>(null);
   const fluidRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  // null until we know the pointer type — WebGL atmosphere only mounts on
+  // fine-pointer devices (mouse parallax is meaningless + costly on touch).
+  const [coarsePointer, setCoarsePointer] = useState<boolean | null>(null);
 
   useEffect(() => {
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    setCoarsePointer(coarse);
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
 
@@ -52,6 +57,8 @@ export default function Hero() {
       });
 
       // Inertial mouse parallax — three depth tiers, opposite the cursor.
+      // Skipped entirely on touch devices (no cursor to follow).
+      if (coarse) return;
       const setImg = {
         x: gsap.quickTo(imageRef.current, "x", { duration: 0.9, ease: "power3.out" }),
         y: gsap.quickTo(imageRef.current, "y", { duration: 0.9, ease: "power3.out" }),
@@ -86,7 +93,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen w-full overflow-hidden bg-fjord-ink"
+      className="relative h-[100svh] w-full overflow-hidden bg-fjord-ink"
     >
       {/* Background image — statically over-scaled so parallax never reveals an edge */}
       <div ref={imageRef} className="absolute inset-0 scale-110 will-change-transform motion-reduce:scale-100">
@@ -101,9 +108,10 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-fjord-ink/40 via-fjord-ink/10 to-fjord-ink/85" />
       </div>
 
-      {/* Fluid-smoke atmosphere — between image and content */}
+      {/* Fluid-smoke atmosphere — between image and content. Only mounted on
+          fine-pointer devices; on touch the still image + gradient carries it. */}
       <div ref={fluidRef} className="absolute inset-0 will-change-transform">
-        <HeroFluid />
+        {coarsePointer === false ? <HeroFluid /> : null}
       </div>
 
       {/* Content */}
@@ -114,7 +122,9 @@ export default function Hero() {
         <div />
 
         <div className="max-w-4xl pb-4xl">
-          <h1 className="text-fjord-text text-display-hero">Seema Jain</h1>
+          <h1 className="text-fjord-text text-[length:clamp(3rem,11vw,6rem)] font-semibold leading-[0.95] tracking-[-0.03em]">
+            Seema Jain
+          </h1>
           <p className="mt-lg max-w-xl text-body-lg text-fjord-text/80">
             Senior Product Designer — turning complex enterprise data into
             clarity.

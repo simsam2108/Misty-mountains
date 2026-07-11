@@ -252,7 +252,7 @@ export default function CaseStudyOverlay({ project, onClose, onNavigate }: Props
           <button
             type="button"
             onClick={onClose}
-            className="rounded-sm border border-hairline bg-elevated px-sm py-xxs text-body-md font-medium text-ink transition-colors hover:bg-hairline-soft"
+            className="rounded-sm border border-hairline bg-elevated px-md py-xs text-body-md font-medium text-ink transition-colors hover:bg-hairline-soft"
           >
             Close ✕
           </button>
