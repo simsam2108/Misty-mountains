@@ -577,7 +577,7 @@ export const projects: Project[] = [
     title: "CoCreate",
     role: "Product Designer",
     discipline: "Product Design",
-    org: "In Progress",
+    org: "Independent project",
     year: "2026",
     inProgress: true,
     hero: { src: "/projects/cocreate-hero.png", width: 2117, height: 4452 },

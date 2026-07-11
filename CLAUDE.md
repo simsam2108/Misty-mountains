@@ -7,6 +7,7 @@
 - Depth: 1px hairlines + whisper shadow only, never drop shadows
 - The hero mesh gradient is the only decorative gradient on the site
 - Hero carries the version/credit line bottom-right: V1.0 — VIBE-CODED WITH CLAUDE. Update the version number on major revisions.
+- Overlay top bar: ← ALL WORK left, CLOSE ✕ right, both mono eyebrow text — no boxed buttons in wayfinding.
 
 ## Working rules
 - Dev server already runs on localhost:3000 — never start one

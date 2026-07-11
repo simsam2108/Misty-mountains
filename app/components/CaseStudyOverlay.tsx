@@ -45,10 +45,8 @@ function ProjectPager({
       aria-label="More projects"
       className="mt-3xl border-t border-hairline pt-2xl"
     >
-      <div className="mb-lg flex items-center justify-between">
-        <p className="font-mono text-mono-eyebrow uppercase text-mute">
-          More work
-        </p>
+      <div className="flex items-center justify-between gap-lg">
+        {prev ? <Link project={prev} dir="prev" /> : <span />}
         <button
           type="button"
           onClick={onClose}
@@ -56,9 +54,6 @@ function ProjectPager({
         >
           All work ↑
         </button>
-      </div>
-      <div className="flex items-start justify-between gap-lg">
-        {prev ? <Link project={prev} dir="prev" /> : <span />}
         {next ? <Link project={next} dir="next" /> : <span />}
       </div>
     </nav>
@@ -244,16 +239,20 @@ export default function CaseStudyOverlay({ project, onClose, onNavigate }: Props
       data-lenis-prevent
       className="fixed inset-0 z-50 overflow-y-auto bg-canvas"
     >
-      {/* Top bar */}
+      {/* Top bar — two quiet mono text controls over a hairline, no boxes */}
       <div className="sticky top-0 z-10 border-b border-hairline bg-canvas/90 backdrop-blur">
-        <div className="mx-auto flex max-w-container items-center justify-between px-lg py-sm">
-          <span className="font-mono text-mono-eyebrow uppercase text-mute">
-            {project.index} — {project.org}
-          </span>
+        <div className="mx-auto flex max-w-container items-center justify-between px-lg">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-sm border border-hairline bg-elevated px-md py-xs text-body-md font-medium text-ink transition-colors hover:bg-hairline-soft"
+            className="rounded-sm py-sm font-mono text-mono-eyebrow uppercase text-mute outline-none transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+          >
+            ← All work
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-sm py-sm font-mono text-mono-eyebrow uppercase text-mute outline-none transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
           >
             Close ✕
           </button>
@@ -263,7 +262,7 @@ export default function CaseStudyOverlay({ project, onClose, onNavigate }: Props
       <article className="mx-auto max-w-container px-lg pb-section pt-2xl">
         <header className="max-w-3xl">
           <p className="eyebrow text-mute">
-            {project.discipline}
+            {project.index} · {project.discipline} · {project.org}
             {project.inProgress ? " · In Progress" : ` · ${project.year}`}
           </p>
           <h1 className="mt-md text-heading-lg text-ink md:text-display-xl">
