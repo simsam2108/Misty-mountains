@@ -15,11 +15,9 @@ type Props = {
 function ProjectPager({
   slug,
   onNavigate,
-  onClose,
 }: {
   slug: string;
   onNavigate: (slug: string) => void;
-  onClose: () => void;
 }) {
   const { prev, next } = adjacentProjects(slug);
 
@@ -47,13 +45,6 @@ function ProjectPager({
     >
       <div className="flex items-center justify-between gap-lg">
         {prev ? <Link project={prev} dir="prev" /> : <span />}
-        <button
-          type="button"
-          onClick={onClose}
-          className="font-mono text-mono-eyebrow uppercase text-mute underline-offset-4 transition-colors hover:text-ink hover:underline"
-        >
-          All work ↑
-        </button>
         {next ? <Link project={next} dir="next" /> : <span />}
       </div>
     </nav>
@@ -239,7 +230,7 @@ export default function CaseStudyOverlay({ project, onClose, onNavigate }: Props
       data-lenis-prevent
       className="fixed inset-0 z-50 overflow-y-auto bg-canvas"
     >
-      {/* Top bar — two quiet mono text controls over a hairline, no boxes */}
+      {/* Top bar - two quiet mono text controls over a hairline, no boxes */}
       <div className="sticky top-0 z-10 border-b border-hairline bg-canvas/90 backdrop-blur">
         <div className="mx-auto flex max-w-container items-center justify-between px-lg">
           <button
@@ -283,7 +274,7 @@ export default function CaseStudyOverlay({ project, onClose, onNavigate }: Props
           ))}
         </dl>
 
-        {/* Hero image — rendered at its true ratio so nothing crops.
+        {/* Hero image - rendered at its true ratio so nothing crops.
             Portrait heroes (phone screenshots) sit centered on the mat at a
             phone-scale width instead of stretching the full column. */}
         {(() => {
@@ -308,14 +299,14 @@ export default function CaseStudyOverlay({ project, onClose, onNavigate }: Props
           );
         })()}
 
-        {/* Sections — copy in a narrow reading column, images breathe wider */}
+        {/* Sections - copy in a narrow reading column, images breathe wider */}
         <div className="mt-3xl flex flex-col gap-3xl">
           {project.sections.map((s) => (
             <SectionBlock key={s.heading} section={s} />
           ))}
         </div>
 
-        <ProjectPager slug={project.slug} onNavigate={onNavigate} onClose={onClose} />
+        <ProjectPager slug={project.slug} onNavigate={onNavigate} />
       </article>
     </div>
   );
