@@ -79,7 +79,7 @@ export default function Closing() {
               Get in touch
             </a>
             <a
-              href="https://drive.google.com/drive/folders/1KnEYdMy_1qlUjsXuE-vMyzTwOWEnKMdF"
+              href="https://drive.google.com/file/d/1E-4IRFXxPkJ6GRpmqj5wGp1_sO7ZdMW4/view?usp=sharing"
               target="_blank"
               rel="noreferrer"
               className="rounded-pill border border-hairline bg-elevated px-lg py-sm text-body-lg font-medium text-ink transition-colors hover:bg-hairline-soft"
