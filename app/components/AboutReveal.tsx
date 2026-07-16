@@ -12,10 +12,10 @@ import { gsap } from "@/lib/gsap";
 
 // The merged About statement - one paragraph, wraps responsively.
 const STATEMENT =
-  "Senior Product Designer turning complex enterprise data into clarity. " +
-  "7+ years building B2B SaaS platforms, native mobile apps, design systems, " +
-  "and end-to-end flows, most recently across EV infrastructure at " +
-  "ChargePoint and The Mobility House.";
+  "7+ years turning dense enterprise systems into products people can " +
+  "actually use. B2B SaaS platforms, native mobile apps, and design systems, " +
+  "most recently across EV infrastructure at ChargePoint and The Mobility " +
+  "House.";
 
 const WORDS = STATEMENT.split(" ");
 

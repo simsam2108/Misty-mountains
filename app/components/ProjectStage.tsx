@@ -12,6 +12,9 @@ type Props = {
   order: number;
 };
 
+// Root-relative base path; empty at the site root, keeping links domain-agnostic.
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 /**
  * One project in the sticky overlap-stack. Each card is pinned near the top
  * (position: sticky); as you scroll, the next card rises up and covers the
@@ -97,11 +100,19 @@ export default function ProjectStage({
       }
       className="stack-card group mt-2xl flex flex-col overflow-hidden rounded-lg border border-hairline bg-canvas px-lg pb-md pt-lg shadow-[0_1px_1px_rgba(0,0,0,0.04)]"
     >
-      {/* Tinted mat - click opens the case study */}
+      {/* Tinted mat - a real /work/<slug> link (crawlable, open-in-new-tab
+          friendly); a plain click is intercepted to open the overlay smoothly
+          without a full navigation. */}
       <div className="flex flex-1 items-center justify-center">
-        <button
-          type="button"
-          onClick={() => onOpen(project.slug)}
+        <a
+          href={`${BASE_PATH}/work/${project.slug}/`}
+          onClick={(e) => {
+            // Let modified clicks / new-tab behave natively.
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0)
+              return;
+            e.preventDefault();
+            onOpen(project.slug);
+          }}
           aria-label={`Open ${project.title} case study`}
           className="project-stage relative flex items-center justify-center overflow-hidden rounded-md border border-hairline outline-none transition-transform duration-200 focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-2 focus-visible:ring-offset-elevated active:scale-[0.99]"
         >
@@ -116,7 +127,7 @@ export default function ProjectStage({
               className="h-auto max-h-full w-auto max-w-full rounded-sm object-contain"
             />
           </span>
-        </button>
+        </a>
       </div>
 
       {/* Caption row - index / title·discipline / year */}

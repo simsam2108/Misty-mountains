@@ -1,15 +1,5 @@
-import Nav from "./components/Nav";
-import Hero from "./components/Hero";
-import ProjectsSection from "./components/ProjectsSection";
-import Closing from "./components/Closing";
+import SiteShell from "./components/SiteShell";
 
 export default function Home() {
-  return (
-    <main id="top">
-      <Nav />
-      <Hero />
-      <ProjectsSection />
-      <Closing />
-    </main>
-  );
+  return <SiteShell />;
 }

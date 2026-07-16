@@ -158,17 +158,7 @@ export default function Hero() {
             <span className="eyebrow">Scroll to explore</span>
             <span className="h-px w-16 bg-fjord-mute/50" />
           </div>
-          {/* Credit line - centered under the scroll indicator on small screens */}
-          <p className="eyebrow mt-sm text-center text-mute sm:hidden">
-            V1.0 · Vibe-coded with Claude
-          </p>
         </div>
-
-        {/* Credit line - bottom-right, sharing the scroll indicator's baseline
-            (offsets mirror the container's px-lg / py-2xl padding tokens) */}
-        <p className="eyebrow absolute bottom-2xl right-lg hidden text-mute sm:block">
-          V1.0 · Vibe-coded with Claude
-        </p>
       </div>
     </section>
   );

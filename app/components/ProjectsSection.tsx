@@ -10,18 +10,32 @@ import CaseStudyOverlay from "./CaseStudyOverlay";
  * Uniform 16/10 mat frames (one per project) + a sticky "where am I"
  * counter, plus the URL-addressable full-screen case-study overlay.
  */
-export default function ProjectsSection() {
+// Root-relative base path (empty at the site root; set only if the site is
+// ever served under a sub-path). Keeps every URL domain-agnostic.
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
+/** Extract a project slug from a `/work/<slug>` pathname, else null. */
+function slugFromPath(pathname: string): string | null {
+  const m = pathname.slice(BASE_PATH.length).match(/^\/work\/([^/]+)\/?$/);
+  return m ? m[1] : null;
+}
+
+export default function ProjectsSection({
+  initialSlug = null,
+}: {
+  initialSlug?: string | null;
+}) {
   const [active, setActive] = useState(0);
   const [inView, setInView] = useState(false);
-  const [openSlug, setOpenSlug] = useState<string | null>(null);
+  // Seeded from the route on a /work/<slug> page so the overlay is present in
+  // the static HTML (and matches on hydration).
+  const [openSlug, setOpenSlug] = useState<string | null>(initialSlug);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Sync overlay <-> URL (shallow, deep-linkable, back-button friendly)
+  // Push a real path route so each case study is a shareable, crawlable URL.
   const setUrl = useCallback((slug: string | null) => {
-    const url = new URL(window.location.href);
-    if (slug) url.searchParams.set("project", slug);
-    else url.searchParams.delete("project");
-    window.history.pushState({}, "", url);
+    const path = slug ? `${BASE_PATH}/work/${slug}/` : `${BASE_PATH}/`;
+    window.history.pushState({}, "", path);
   }, []);
 
   const open = useCallback(
@@ -37,10 +51,17 @@ export default function ProjectsSection() {
     setUrl(null);
   }, [setUrl]);
 
-  // Deep-link on load + browser back/forward
+  // Resolve the open project from the path on load + browser back/forward, and
+  // transparently upgrade legacy `?project=<slug>` links to the new path.
   useEffect(() => {
     const sync = () => {
-      const slug = new URL(window.location.href).searchParams.get("project");
+      const url = new URL(window.location.href);
+      let slug = slugFromPath(url.pathname);
+      const legacy = url.searchParams.get("project");
+      if (!slug && legacy && projectBySlug(legacy)) {
+        slug = legacy;
+        window.history.replaceState({}, "", `${BASE_PATH}/work/${slug}/`);
+      }
       setOpenSlug(slug && projectBySlug(slug) ? slug : null);
     };
     sync();

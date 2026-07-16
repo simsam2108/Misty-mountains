@@ -11,6 +11,9 @@ type Props = {
   onNavigate: (slug: string) => void;
 };
 
+// Root-relative base path; empty at the site root, keeping links domain-agnostic.
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 /** Prev/next pager linking to the adjacent case studies. */
 function ProjectPager({
   slug,
@@ -22,9 +25,14 @@ function ProjectPager({
   const { prev, next } = adjacentProjects(slug);
 
   const Link = ({ project: p, dir }: { project: Project; dir: "prev" | "next" }) => (
-    <button
-      type="button"
-      onClick={() => onNavigate(p.slug)}
+    <a
+      href={`${BASE_PATH}/work/${p.slug}/`}
+      onClick={(e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0)
+          return;
+        e.preventDefault();
+        onNavigate(p.slug);
+      }}
       className={`group flex min-h-[44px] flex-col justify-center gap-xxs rounded-sm py-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink ${
         dir === "next" ? "items-end text-right" : "items-start text-left"
       }`}
@@ -35,7 +43,7 @@ function ProjectPager({
       <span className="text-label-sm text-ink underline-offset-4 group-hover:underline">
         {p.title}
       </span>
-    </button>
+    </a>
   );
 
   return (
