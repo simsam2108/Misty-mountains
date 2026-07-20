@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 
-// GitHub Pages serves this project site under /<repo>. The workflow sets
-// NEXT_PUBLIC_BASE_PATH=/Misty-mountains so links/assets resolve there, while
-// local `next dev` / `next build` stay at the root (empty base path).
+// This is the jainsim.github.io user site, served from the domain root (and at
+// the seema-jain.com custom domain), so basePath stays empty. NEXT_PUBLIC_BASE_PATH
+// remains an escape hatch if the site ever moves under a /<repo> subpath again.
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 // `output: "export"` only for builds. `next dev` (NODE_ENV=development) has a
