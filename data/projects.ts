@@ -271,8 +271,8 @@ export const projects: Project[] = [
         ],
         metrics: [
           { value: "3–5 days", label: "average time from hardware install to station live, before self-serve" },
-          { value: "same day", label: "target time-to-live with self-serve activation via Polaris Suite" },
-          { value: "< 40%", label: "of CX activation tickets estimated to be eliminated through self-serve" },
+          { value: "Same day (target)", label: "target time-to-live with self-serve activation via Polaris Suite" },
+          { value: "< 40% (est.)", label: "of CX activation tickets estimated to be eliminated through self-serve" },
         ],
       },
       {
